@@ -1,0 +1,25 @@
+.share {
+  font-size: 30px;
+}
+
+.title {
+  color: lightgray;
+}
+
+.container-wrapper {
+  display: flex;
+  align-items: center; /* Vertically center the container */
+  justify-content: center; /* Horizontally center the container */
+  height: 100%; /* Fill the entire viewport height */
+  background-image: url("./background4.png"); /* Replace 'your-image-path.jpg' with the path to your image */
+  background-size: cover; /* Cover the entire container */
+}
+
+.search {
+  color: black;
+  background-image: url("./background4.png"); /* Replace 'your-image-path.jpg' with the path to your image */
+}
+
+.cardslist {
+  margin-top: 600px;
+}
