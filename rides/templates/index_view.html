@@ -26,48 +26,37 @@
   </div>
   <div style="height: 280px"></div>
 
-  <div class="cardslist container text-center mt-5">
-    <div class="row align-items-center">
-      <div class="col">
-        <div class="container text-center" style="min-width: 1200px">
-          {% for person in people %} {% if forloop.first %}
-          <div class="row d-flex justify-content-center mb-5">
-            {% endif %}
-            <div
-              class="col-3 d-flex flex-column justify-content align-items-center"
-            >
-              <div class="card text-start" style="width: 18rem">
-                <img
-                  src="{% static 'logo.png' %}"
-                  class="card-img-top"
-                  height="200"
-                  style="object-fit: cover"
-                />
-                <div class="card-body">
-                  <h5 class="card-title">{{person.first_name}}</h5>
-                  <h6 class="card-subtitle mb-2 text-body-secondary">
-                    Destination: {{ person.destination_city}},
-                    {{person.destination_state}}
-                  </h6>
-                  <p class="card-text mb-1">
-                    Leave: {{person.time}} on {{person.date}}
-                  </p>
-                  <p class="card-text mb-1">
-                    Seats: {{person.seats_available}}
-                  </p>
-                </div>
-              </div>
-            </div>
-            {% if forloop.counter|divisibleby:3 %}
-          </div>
-          <div class="row d-flex justify-content-center mb-5">
-            {% endif %} {% if forloop.last %}
-          </div>
-          {% endif %} {% endfor %}
+{% if people %}
+<div class="container text-center mt-5">
+  <div class="row justify-content-center">
+    {% for person in people %}
+    <div class="col-12 col-md-6 d-flex justify-content-center mb-5" style="position: relative; z-index: -1;">
+      <div class="card text-start" style="width: 18rem">
+        <img src="{% static 'logo.png' %}" class="card-img-top" height="200" style="object-fit: cover" />
+        <div class="card-body">
+          <h5 class="card-title">{{ person.first_name }}</h5>
+          <h6 class="card-subtitle mb-2 text-body-secondary">
+            Destination: {{ person.destination_city }}, {{ person.destination_state }}
+          </h6>
+          <p class="card-text mb-1">
+            Leave: {{ person.time }} on {{ person.date }}
+          </p>
+          <p class="card-text mb-1">
+            Seats: {{ person.seats_available }}
+          </p>
         </div>
       </div>
     </div>
+    {% endfor %}
   </div>
+</div>
+
+  {% else %}
+  <!-- Display AI-generated response if no people are found -->
+  <div class="ai-response container text-center mt-5">
+    <p>{{ ai_text }}</p>
+  </div>
+  {% endif %}
 </div>
 
 {% endblock %}

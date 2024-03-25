@@ -12,11 +12,7 @@ def index(request):
   # Initialize an empty queryset
   filtered_people = Person.objects.all()
 
-  print(filtered_people)
-  print(request.GET)
-
   if "stateSearch" in request.GET:
-    print("hi")
     context["inputExists"] = True
     stateSearch = request.GET["stateSearch"]
     citySearch = ""
@@ -32,16 +28,13 @@ def index(request):
     
     context["people"] = filtered_people
 
-    ('filtered people')
-    
-  if "city_search" in request.GET and "state_search" in request.GET:
-    city_search = request.GET["city_search"]
-    state_search = request.GET["state_search"]
-
-    print(city_search)
-    print(state_search)
-
-    # Assign filtered queryset to context
+  if not filtered_people:
+    print("bye")
+    user_input = request.GET.get("query", "")  # Example of getting a general query input
+    ai_response = generate_ai_response(user_input)
+    context["ai_text"] = ai_response
+  else:
+    print("hi")
     context["people"] = filtered_people
 
   context["new_ride_form"] = NewRideForm()
@@ -62,3 +55,25 @@ def form(request):
   context["form"] = RideForm()
   context["new_ride_form"] = NewRideForm()
   return render(request, "form.html", context)
+
+import os
+from transformers import pipeline
+from .models import Person
+
+def generate_ai_response(user_input):
+    # Adjust the prompt to suggest the user is looking for help with searching
+    if user_input.strip() == "":
+        # Default prompt if the user input is empty or just whitespace
+        prompt = "The user is trying to find a ride but isn't sure what to search for. How should they refine their search query. The search is only for cities and states."
+    else:
+        # Craft a prompt that includes the user's input and asks the AI for help
+        prompt = f"The user entered '{user_input}' in the search but didn't find what they were looking for. How can they refine their search query to find a ride more effectively? The search is only for cities and states."
+
+    # Initialize the text generation pipeline with the desired model
+    generator = pipeline("text-generation", model="openai-community/gpt2")
+    # Generate text based on the crafted prompt
+    ai_text = generator(prompt, max_length=100, num_return_sequences=1)[0]['generated_text']
+    # Extract the final AI response
+    final_ai_text = ai_text.split("AI:")[-1].strip()
+    return final_ai_text
+
